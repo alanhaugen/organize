@@ -1,0 +1,162 @@
+#!/Users/hanswhitburnhaugen/perl5/perlbrew/perls/perl-5.40.0/bin/perl
+
+use 5.40.0;
+use utf8;
+use warnings;
+use autodie;
+
+use DBI;
+#use LWP::UserAgent;
+#use Data::Dumper;
+#
+## Get POST
+#my $ua      = LWP::UserAgent->new(); 
+#my $request = POST( 'localhost', [ 'port' => 8, 'target' => 64 ] ); 
+#my $content = $ua->request($request)->as_string(); 
+
+# Make this script into a website
+print("Content-Type: text/html\n\n");
+
+# Create the header
+print( q*
+<!DOCTYPE html lang=en>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<title>Organizer</title>
+<meta name="description" content="Website to help organize Alan's life">
+<meta name="author" content="Hans Alan Whitburn Haugen">
+
+<!-- Mobile Specific Metas
+–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+        *
+);
+
+# Setup the FONT
+print( q*
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+        *
+);
+
+# Setup the CSS
+print( q*
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton.css">
+        *
+);
+
+# End of header
+print("</head>");
+
+# Start body
+print(q*
+<body>
+    <div class="container">
+      <div class="row">
+        <div class="six columns" style="margin-top: 15%">
+        *
+);
+
+# Setup variables to connect to DB
+my $data_source = q/DBI:MariaDB:organizer;127.0.0.1;3306/;
+my $user = q/root/;
+my $password = q//;
+
+# Connect to the data source and get a handle for that connection.
+my $dbh = DBI->connect($data_source, $user, $password)
+    or die "Can't connect to $data_source: $DBI::errstr";
+
+# Inbox section
+print "<h1>Inbox</h1>";
+print "<h6>Update in the morning</h3>";
+
+print(  q*
+<div class="row">
+<div class="nine columns">
+<input class="u-full-width" type="text" placeholder="New todo item …" id="exampleEmailInput">
+</div>
+<div class="three columns">
+  <input class="button-primary" type="submit" value="Add">
+</div>
+</div>
+        *
+);
+
+
+my $sth = $dbh->prepare("SELECT message FROM inbox INNER JOIN todos ON todos.todo_id=inbox.todo_id")
+                   or die "prepare statement failed: $dbh->errstr()";
+
+$sth->execute() or die "execution failed: $dbh->errstr()"; 
+
+my($lname,$fname,$ext);
+
+print(q*<ul class="task-list">*);
+# loop through each row of the result set, and print it
+while(($lname,$fname,$ext) = $sth->fetchrow()){
+   print(q?<li><input type="checkbox" disabled="" />?);
+   print(" $lname $fname\t$ext\n");
+   print("</li>")
+}
+print("</ul>");
+
+print "<h6>#calls #atComputer #errands #office #atHome #agendas #read</h3>";
+
+# Action section 
+print "<h1>Action</h1>";
+print "<h6>Assign time. Revisit. Flag what needs to be done today. The battle is to remember what to do!</h3>";
+
+$sth = $dbh->prepare("SELECT message FROM action INNER JOIN todos ON todos.todo_id=action.todo_id")
+                   or die "prepare statement failed: $dbh->errstr()";
+
+$sth->execute() or die "execution failed: $dbh->errstr()"; 
+
+print(q*<ul class="task-list">*);
+# loop through each row of the result set, and print it
+while(($lname,$fname,$ext) = $sth->fetchrow()){
+   print(q?<li><input type="checkbox" disabled="" />?);
+   print(" $lname $fname\t$ext\n");
+   print("</li>")
+}
+print("</ul>");
+
+# Wait section 
+print "<h1>Wait</h1>";
+print "<h6>Deffered actions. Waiting for the right time or on other people</h3>";
+
+$sth = $dbh->prepare("SELECT message FROM wait INNER JOIN todos ON todos.todo_id=wait.todo_id")
+                   or die "prepare statement failed: $dbh->errstr()";
+
+$sth->execute() or die "execution failed: $dbh->errstr()"; 
+
+print(q*<ul class="task-list">*);
+# loop through each row of the result set, and print it
+while(($lname,$fname,$ext) = $sth->fetchrow()){
+   print(q?<li><input type="checkbox" disabled="" />?);
+   print(" $lname $fname\t$ext\n");
+   print("</li>")
+}
+print("</ul>");
+
+# Long term plan section 
+print "<h1>Long term plan</h1>";
+print "<h6>Update Weekly</h3>";
+
+$sth = $dbh->prepare("SELECT message FROM long_term INNER JOIN todos ON todos.todo_id=long_term.todo_id")
+                   or die "prepare statement failed: $dbh->errstr()";
+
+$sth->execute() or die "execution failed: $dbh->errstr()"; 
+
+print(q*<ul class="task-list">*);
+# loop through each row of the result set, and print it
+while(($lname,$fname,$ext) = $sth->fetchrow()){
+   print(q?<li><input type="checkbox" disabled="" />?);
+   print(" $lname $fname\t$ext\n");
+   print("</li>")
+}
+print("</ul>");
+
+$sth->finish();
+$dbh->disconnect();
+
