@@ -1,18 +1,11 @@
-#!/Users/hanswhitburnhaugen/perl5/perlbrew/perls/perl-5.40.0/bin/perl
+#!/usr/bin/perl
 
-use 5.40.0;
+use 5.34.0;
 use utf8;
 use warnings;
 use autodie;
 
 use DBI;
-#use LWP::UserAgent;
-#use Data::Dumper;
-#
-## Get POST
-#my $ua      = LWP::UserAgent->new(); 
-#my $request = POST( 'localhost', [ 'port' => 8, 'target' => 64 ] ); 
-#my $content = $ua->request($request)->as_string(); 
 
 # Make this script into a website
 print("Content-Type: text/html\n\n");
@@ -60,7 +53,7 @@ print(q*
 );
 
 # Setup variables to connect to DB
-my $data_source = q/DBI:MariaDB:organizer;127.0.0.1;3306/;
+my $data_source = q/DBI:mysql:organizer;127.0.0.1;3306/;
 my $user = q/root/;
 my $password = q//;
 
