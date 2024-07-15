@@ -40,6 +40,38 @@ print( q*
         *
 );
 
+# Setup ajax
+print (q*
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+    <script>
+
+            $(document).ready(function() {
+
+                $("#test").click(function(){
+                    var ID = 100;
+                    $.ajax({
+                            type: 'POST',
+                            url: '/cgi-bin/ajax/stackCGI/ajax.pl',
+                            data: { 'data_id': ID },
+                            success: function(res) {
+
+                                                        alert("your ID is: " + res.result);
+
+                                                    },
+                            error: function() {alert("did not work");}
+                    });
+                })
+
+            })
+
+
+
+        </script>
+q*
+);
+
 # End of header
 print("</head>");
 
@@ -71,7 +103,7 @@ print(  q*
 <input class="u-full-width" type="text" placeholder="New todo item …" id="exampleEmailInput">
 </div>
 <div class="three columns">
-  <input class="button-primary" type="submit" value="Add">
+  <input class="button-primary" type="submit" value="Add" id="test">
 </div>
 </div>
         *
