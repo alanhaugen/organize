@@ -58,6 +58,7 @@ print (q*
                             success: function(res) {
 
 							$("#inbox").append('<li><input type="checkbox" /> ' + res.result);
+							document.getElementById('todo_input').value = "";
 
                                                     },
                             error: function() {alert("did not work");}
