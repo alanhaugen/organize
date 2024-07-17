@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use JSON; #if not already installed, just run "cpan JSON"
+use JSON;
 use CGI;
 
 my $cgi = CGI->new;

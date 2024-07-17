@@ -53,7 +53,7 @@ print (q*
                     var ID = 100;
                     $.ajax({
                             type: 'POST',
-                            url: '/cgi-bin/ajax/stackCGI/ajax.pl',
+                            url: '/cgi-bin/organize/ajax.pl',
                             data: { 'data_id': ID },
                             success: function(res) {
 
