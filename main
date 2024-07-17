@@ -49,7 +49,7 @@ print (q*
 
             $(document).ready(function() {
 
-                $("#test").click(function(){
+                $("#add").click(function(){
                     var ID = document.getElementById('todo_input').value;
                     $.ajax({
                             type: 'POST',
@@ -57,7 +57,7 @@ print (q*
                             data: { 'data_id': ID },
                             success: function(res) {
 
-							$("#inbox").append('<li><input type="checkbox" />' + res.result);
+							$("#inbox").append('<li><input type="checkbox" /> ' + res.result);
 
                                                     },
                             error: function() {alert("did not work");}
@@ -103,7 +103,7 @@ print(  q*
 <input class="u-full-width" type="text" placeholder="New todo item …" id="todo_input">
 </div>
 <div class="three columns">
-  <input class="button-primary" type="submit" value="Add" id="test">
+  <input class="button-primary" type="submit" value="Add" id="add">
 </div>
 </div>
         *
@@ -128,11 +128,11 @@ while(($lname,$fname,$ext) = $sth->fetchrow()){
    $checked = $sth_check->fetchrow();
    if ($checked == 0)
    {
-       print(q?<li><input type="checkbox" />?);
+       print(q?<li><input class="is_done" type="checkbox" />?);
    }
    if ($checked == 1)
    {
-       print(q?<li><input type="checkbox" checked />?);
+       print(q?<li><input class="is_done" type="checkbox" checked />?);
    }
    print(" $lname $fname\t$ext\n");
    print("</li>")
