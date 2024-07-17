@@ -50,7 +50,7 @@ print (q*
             $(document).ready(function() {
 
                 $("#test").click(function(){
-                    var ID = 100;
+                    var ID = document.getElementById('todo_input').value;
                     $.ajax({
                             type: 'POST',
                             url: '/cgi-bin/organize/ajax.pl',
@@ -69,7 +69,7 @@ print (q*
 
 
         </script>
-q*
+*
 );
 
 # End of header
@@ -100,7 +100,7 @@ print "<h6>Update in the morning</h3>";
 print(  q*
 <div class="row">
 <div class="nine columns">
-<input class="u-full-width" type="text" placeholder="New todo item …" id="exampleEmailInput">
+<input class="u-full-width" type="text" placeholder="New todo item …" id="todo_input">
 </div>
 <div class="three columns">
   <input class="button-primary" type="submit" value="Add" id="test">
@@ -108,7 +108,6 @@ print(  q*
 </div>
         *
 );
-
 
 my $sth = $dbh->prepare("SELECT message FROM inbox INNER JOIN todos ON todos.todo_id=inbox.todo_id")
                    or die "prepare statement failed: $dbh->errstr()";
