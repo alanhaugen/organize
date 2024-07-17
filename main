@@ -114,12 +114,26 @@ my $sth = $dbh->prepare("SELECT message FROM inbox INNER JOIN todos ON todos.tod
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
 
+my $sth_check = $dbh->prepare("SELECT COALESCE(is_done, 0) FROM inbox INNER JOIN todos ON todos.todo_id=inbox.todo_id")
+                   or die "prepare statement failed: $dbh->errstr()";
+
+$sth_check->execute() or die "execution failed: $dbh->errstr()"; 
+
 my($lname,$fname,$ext);
+my $checked;
 
 print(q*<ul class="task-list">*);
 # loop through each row of the result set, and print it
 while(($lname,$fname,$ext) = $sth->fetchrow()){
-   print(q?<li><input type="checkbox" disabled="" />?);
+   $checked = $sth_check->fetchrow();
+   if ($checked == 0)
+   {
+       print(q?<li><input type="checkbox" />?);
+   }
+   if ($checked == 1)
+   {
+       print(q?<li><input type="checkbox" checked />?);
+   }
    print(" $lname $fname\t$ext\n");
    print("</li>")
 }
