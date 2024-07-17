@@ -57,7 +57,7 @@ print (q*
                             data: { 'data_id': ID },
                             success: function(res) {
 
-                                                        alert("your ID is: " + res.result);
+							$("#inbox").append('<li><input type="checkbox" />' + res.result);
 
                                                     },
                             error: function() {alert("did not work");}
@@ -122,7 +122,7 @@ $sth_check->execute() or die "execution failed: $dbh->errstr()";
 my($lname,$fname,$ext);
 my $checked;
 
-print(q*<ul class="task-list">*);
+print(q*<ul class="task-list" id="inbox">*);
 # loop through each row of the result set, and print it
 while(($lname,$fname,$ext) = $sth->fetchrow()){
    $checked = $sth_check->fetchrow();
