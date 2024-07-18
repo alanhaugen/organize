@@ -65,6 +65,22 @@ print (q*
                     });
                 })
 
+		    $('.is_done').each(function(index, object) {
+		    $(this).on("click", function(){
+			    var ID = object.id;
+			    $.ajax({
+				    type: 'POST',
+				    url: '/cgi-bin/organize/ajax2.pl',
+				    data: { 'data_id': ID },
+				    success: function(res) {
+
+							    //alert(ID);
+
+							    },
+							    error: function() {alert("did not work: " + ID);}
+			    });
+			    });
+			});
             })
 
 
@@ -129,11 +145,11 @@ while(($lname,$fname,$ext) = $sth->fetchrow()){
    $checked = $sth_check->fetchrow();
    if ($checked == 0)
    {
-       print(q?<li><input class="is_done" type="checkbox" />?);
+       print(q?<li><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
    }
    if ($checked == 1)
    {
-       print(q?<li><input class="is_done" type="checkbox" checked />?);
+       print(q?<li><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
    }
    print(" $lname $fname\t$ext\n");
    print("</li>")
