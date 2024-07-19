@@ -44,10 +44,97 @@ print( q*
 print (q*
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
+<style>
+.dragbox {
+  margin: 0 .2rem;
+  font-size: 90%;
+  white-space: nowrap;
+  background: #F1F1F1;
+  border: 1px solid #E1E1E1;
+  border-radius: 4px;
+  padding: 15px 0px;
+  text-align: center;
+};
+</style>
 
     <script>
 
+	function handleDragStart(e) {
+	  this.style.opacity = '0.4';
+	  this.style.border = '1px dotted #666';
+	  this.style.padding = '3px';
+
+	  dragSrcEl = this;
+
+	  e.dataTransfer.effectAllowed = 'move';
+	  e.dataTransfer.setData('text/html', this.innerHTML);
+
+	  document.querySelectorAll('.dragbox').forEach(e => e.remove());
+
+	  $("#action").append('<li class="dragbox">Drag item here to add to actions list …</li>');
+	  $("#wait").append('<li class="dragbox">Drag item here to add to wait list …</li>');
+	  $("#long-term").append('<li class="dragbox box">Drag item to add to long term plans list …</li>');
+		let items2 = document.querySelectorAll('.dragbox');
+		items2.forEach(function (item) {
+		  item.addEventListener('dragstart', handleDragStart);
+		  item.addEventListener('dragover', handleDragOver);
+		  item.addEventListener('dragend', handleDragEnd);
+		  item.addEventListener('dragenter', handleDragEnter);
+		  item.addEventListener('dragleave', handleDragLeave);
+		  item.addEventListener('drop', handleDrop);
+		});
+	}
+
+	function handleDragEnd(e) {
+	  this.style.opacity = '1';
+	  this.style.border = 0;
+	  this.style.padding = '0px';
+
+	  items.forEach(function (item) {
+	      item.classList.remove('over');
+	  });
+	}
+
+	function handleDragOver(e) {
+	  e.preventDefault();
+	  e.dataTransfer.effectAllowed = 'move';
+	  e.dataTransfer.setData('text/html', this.innerHTML);
+	  return false;
+	}
+
+	function handleDragEnter(e) {
+	  this.classList.add('over');
+	}
+
+	function handleDragLeave(e) {
+	  this.classList.remove('over');
+	}
+
+	function handleDrop(e) {
+	  e.stopPropagation(); // stops the browser from redirecting.
+
+	  dragSrcEl.innerHTML = this.innerHTML;
+	  this.innerHTML = e.dataTransfer.getData('text/html');
+
+	  dragSrcEl.remove();
+
+	  this.classList.remove('dragbox');
+
+	  return false;
+	}
+
+
             $(document).ready(function() {
+
+		let items = document.querySelectorAll('.box');
+		items.forEach(function (item) {
+		  item.addEventListener('dragstart', handleDragStart);
+		  item.addEventListener('dragover', handleDragOver);
+		  item.addEventListener('dragend', handleDragEnd);
+		  item.addEventListener('dragenter', handleDragEnter);
+		  item.addEventListener('dragleave', handleDragLeave);
+		  item.addEventListener('drop', handleDrop);
+		});
 
                 $("#add").click(function(){
                     var ID = document.getElementById('todo_input').value;
@@ -145,11 +232,11 @@ while(($lname,$fname,$ext) = $sth->fetchrow()){
    $checked = $sth_check->fetchrow();
    if ($checked == 0)
    {
-       print(q?<li><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
+       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
    }
    if ($checked == 1)
    {
-       print(q?<li><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
+       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
    }
    print(" $lname $fname\t$ext\n");
    print("</li>")
@@ -167,7 +254,7 @@ $sth = $dbh->prepare("SELECT message FROM action INNER JOIN todos ON todos.todo_
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
 
-print(q*<ul class="task-list">*);
+print(q*<ul id="action" class="task-list">*);
 # loop through each row of the result set, and print it
 while(($lname,$fname,$ext) = $sth->fetchrow()){
    print(q?<li><input type="checkbox" disabled="" />?);
@@ -185,7 +272,7 @@ $sth = $dbh->prepare("SELECT message FROM wait INNER JOIN todos ON todos.todo_id
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
 
-print(q*<ul class="task-list">*);
+print(q*<ul class="task-list" id="wait">*);
 # loop through each row of the result set, and print it
 while(($lname,$fname,$ext) = $sth->fetchrow()){
    print(q?<li><input type="checkbox" disabled="" />?);
@@ -203,7 +290,7 @@ $sth = $dbh->prepare("SELECT message FROM long_term INNER JOIN todos ON todos.to
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
 
-print(q*<ul class="task-list">*);
+print(q*<ul class="task-list" id="long-term">*);
 # loop through each row of the result set, and print it
 while(($lname,$fname,$ext) = $sth->fetchrow()){
    print(q?<li><input type="checkbox" disabled="" />?);
