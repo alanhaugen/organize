@@ -113,6 +113,8 @@ print (q*
 	function handleDrop(e) {
 	  e.stopPropagation(); // stops the browser from redirecting.
 
+	  var ID = dragSrcEl.childNodes[0].id;
+
 	  dragSrcEl.innerHTML = this.innerHTML;
 	  this.innerHTML = e.dataTransfer.getData('text/html');
 
@@ -135,11 +137,9 @@ print (q*
 		    list = 4;
 	      }
 
-	      dragSrcEl.remove();
-
 	      this.classList.remove('dragbox');
 
-	      var ID = this.id;
+	      dragSrcEl.remove();
 	      $.ajax({
 	              type: 'POST',
 	              url: '/cgi-bin/organize/remove_todo.pl',
