@@ -21,9 +21,9 @@ my $cgi = CGI->new;
 
 print $cgi->header('application/json;charset=UTF-8');
 
-my $id = $cgi->param('data_id');    
+my $id = $cgi->param('data_id');
 
-my $sth = $dbh->prepare("INSERT INTO todos(message) VALUES('$id')")
+my $sth = $dbh->prepare("INSERT INTO $id(todo_id) VALUES('$id')")
                    or die "prepare statement failed: $dbh->errstr()";
 
 #$sth->execute() or die "execution failed: $dbh->errstr()"; 

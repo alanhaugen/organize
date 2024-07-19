@@ -23,7 +23,9 @@ print $cgi->header('application/json;charset=UTF-8');
 
 my $id = $cgi->param('data_id');    
 
-$id =~ s/"/``/; # Remove illegal characters from string to become SQL insert
+# Remove illegal characters from string to become SQL insert
+$id =~ s/"/``/; 
+$id =~ s/'/`/; 
 
 my $sth = $dbh->prepare("INSERT INTO todos(message) VALUES('$id')")
                    or die "prepare statement failed: $dbh->errstr()";

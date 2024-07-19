@@ -73,7 +73,7 @@ print (q*
 
 	  $("#action").append('<li class="dragbox">Drag item here to add to actions list …</li>');
 	  $("#wait").append('<li class="dragbox">Drag item here to add to wait list …</li>');
-	  $("#long-term").append('<li class="dragbox box">Drag item to add to long term plans list …</li>');
+	  $("#long-term").append('<li class="dragbox box">Drag item here to add to long term plans list …</li>');
 		let items2 = document.querySelectorAll('.dragbox');
 		items2.forEach(function (item) {
 		  item.addEventListener('dragstart', handleDragStart);
@@ -120,26 +120,26 @@ print (q*
 
 	  if (this.classList.contains('dragbox'))
 	  {
-	      var list = 1;
+	      var list = 'inbox';
 
 	      if (dragSrcEl.innerHTML.indexOf("action") !== -1)
 	      {
-		    list = 2;
+		    list = 'action';
 	      }
 	      
 	      if (dragSrcEl.innerHTML.indexOf("wait") !== -1)
 	      {
-		    list = 3;
+		    list = 'wait';
 	      }
 
 	      if (dragSrcEl.innerHTML.indexOf("long term") !== -1)
 	      {
-		    list = 4;
+		    list = 'long_term';
 	      }
 
 	      this.classList.remove('dragbox');
-
 	      dragSrcEl.remove();
+
 	      $.ajax({
 	              type: 'POST',
 	              url: '/cgi-bin/organize/remove_todo.pl',
