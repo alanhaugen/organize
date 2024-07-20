@@ -54,7 +54,10 @@ print (q*
   border-radius: 4px;
   padding: 15px 0px;
   text-align: center;
-};
+}
+.over {
+//margin-top: 50px;
+}
 </style>
 
     <script>
@@ -140,27 +143,16 @@ print (q*
 	      this.classList.remove('dragbox');
 	      dragSrcEl.remove();
 
+
 	      $.ajax({
 	              type: 'POST',
-	              url: '/cgi-bin/organize/remove_todo.pl',
-	              data: { 'data_id': ID },
+	              url: '/cgi-bin/organize/move_todo.pl',
+	              data: { 'data_id': list + '"' + ID },
 	              success: function(res) {
 
-	          			    //alert(ID);
 
 	          			    },
-	          			    error: function() {alert("did not work: " + ID);}
-	      });
-	      $.ajax({
-	              type: 'POST',
-	              url: '/cgi-bin/organize/add_todo.pl',
-	              data: { 'data_id': list },
-	              success: function(res) {
-
-	          			    //alert(ID);
-
-	          			    },
-	          			    error: function() {alert("did not work: " + ID);}
+	          			    error: function() {alert("did not work: " + list + '"' + ID);}
 	      });
 	  }
 

@@ -21,7 +21,11 @@ my $cgi = CGI->new;
 
 print $cgi->header('application/json;charset=UTF-8');
 
-my $id = $cgi->param('data_id');
+my $in = $cgi->param('data_id');
+my @array = split('"', $in);
+
+my $table = $array[0];
+my $id = $array[1];
 
 my $sth = $dbh->prepare("SELECT todo_id FROM todos WHERE message='$id' LIMIT 1")
                    or die "prepare statement failed: $dbh->errstr()";
@@ -32,6 +36,11 @@ my $todo_id;
 $todo_id = $sth->fetchrow();
 
 $sth = $dbh->prepare("DELETE FROM inbox WHERE todo_id=$todo_id")
+                   or die "prepare statement failed: $dbh->errstr()";
+
+$sth->execute() or die "execution failed: $dbh->errstr()"; 
+
+$sth = $dbh->prepare("INSERT INTO $table (todo_id) VALUES($todo_id)")
                    or die "prepare statement failed: $dbh->errstr()";
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
