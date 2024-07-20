@@ -290,10 +290,23 @@ $sth = $dbh->prepare("SELECT message FROM action INNER JOIN todos ON todos.todo_
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
 
+$sth_check = $dbh->prepare("SELECT COALESCE(is_done, 0) FROM action INNER JOIN todos ON todos.todo_id=action.todo_id")
+                   or die "prepare statement failed: $dbh->errstr()";
+
+$sth_check->execute() or die "execution failed: $dbh->errstr()"; 
+
 print(q*<ul id="action" class="task-list">*);
 # loop through each row of the result set, and print it
 while(($lname,$fname,$ext) = $sth->fetchrow()){
-   print(q?<li><input type="checkbox" disabled="" />?);
+   $checked = $sth_check->fetchrow();
+   if ($checked == 0)
+   {
+       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
+   }
+   if ($checked == 1)
+   {
+       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
+   }
    print(" $lname $fname\t$ext\n");
    print("</li>")
 }
@@ -308,10 +321,23 @@ $sth = $dbh->prepare("SELECT message FROM wait INNER JOIN todos ON todos.todo_id
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
 
+$sth_check = $dbh->prepare("SELECT COALESCE(is_done, 0) FROM wait INNER JOIN todos ON todos.todo_id=wait.todo_id")
+                   or die "prepare statement failed: $dbh->errstr()";
+
+$sth_check->execute() or die "execution failed: $dbh->errstr()"; 
+
 print(q*<ul class="task-list" id="wait">*);
 # loop through each row of the result set, and print it
 while(($lname,$fname,$ext) = $sth->fetchrow()){
-   print(q?<li><input type="checkbox" disabled="" />?);
+   $checked = $sth_check->fetchrow();
+   if ($checked == 0)
+   {
+       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
+   }
+   if ($checked == 1)
+   {
+       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
+   }
    print(" $lname $fname\t$ext\n");
    print("</li>")
 }
@@ -326,15 +352,29 @@ $sth = $dbh->prepare("SELECT message FROM long_term INNER JOIN todos ON todos.to
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
 
+$sth_check = $dbh->prepare("SELECT COALESCE(is_done, 0) FROM long_term INNER JOIN todos ON todos.todo_id=long_term.todo_id")
+                   or die "prepare statement failed: $dbh->errstr()";
+
+$sth_check->execute() or die "execution failed: $dbh->errstr()"; 
+
 print(q*<ul class="task-list" id="long-term">*);
 # loop through each row of the result set, and print it
 while(($lname,$fname,$ext) = $sth->fetchrow()){
-   print(q?<li><input type="checkbox" disabled="" />?);
+   $checked = $sth_check->fetchrow();
+   if ($checked == 0)
+   {
+       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
+   }
+   if ($checked == 1)
+   {
+       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
+   }
    print(" $lname $fname\t$ext\n");
    print("</li>")
 }
 print("</ul>");
 
 $sth->finish();
+$sth_check->finish();
 $dbh->disconnect();
 
