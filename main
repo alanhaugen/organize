@@ -223,7 +223,7 @@ padding-right: 10px;
                     var ID = document.getElementById('todo_input').value;
                     $.ajax({
                             type: 'POST',
-                            url: '/cgi-bin/organize/ajax.pl',
+                            url: '/cgi-bin/organize/create.pl',
                             data: { 'data_id': ID },
                             success: function(res) {
 
@@ -240,7 +240,7 @@ padding-right: 10px;
 			    var ID = object.id;
 			    $.ajax({
 				    type: 'POST',
-				    url: '/cgi-bin/organize/ajax2.pl',
+				    url: '/cgi-bin/organize/checkbox.pl',
 				    data: { 'data_id': ID },
 				    success: function(res) {
 
