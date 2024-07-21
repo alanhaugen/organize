@@ -21,9 +21,13 @@ my $cgi = CGI->new;
 
 print $cgi->header('application/json;charset=UTF-8');
 
-my $id = $cgi->param('data_id');    
+my $in = $cgi->param('data_id');    
+my @array = split('"', $in);
 
-my $sth = $dbh->prepare("UPDATE todos SET message = 'new' WHERE message='$id'")
+my $original_message = $array[0];
+my $message = $array[1];
+
+my $sth = $dbh->prepare("UPDATE todos SET message = '$message' WHERE message='$original_message'")
                    or die "prepare statement failed: $dbh->errstr()";
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
@@ -34,7 +38,7 @@ $dbh->disconnect();
 #convert  data to JSON
 my $op = JSON -> new -> utf8 -> pretty(1);
 my $json = $op -> encode({
-    result => $id
+    result => $message
 });
 
 print $json;
