@@ -64,6 +64,9 @@ color: rgba(0, 0, 0, 0.0);
 .hoverOver {
 color: black;
 }
+.update {
+padding-right: 10px;
+}
 </style>
 
     <script>
@@ -185,6 +188,37 @@ color: black;
 		  item.addEventListener('drop', handleDrop);
 		});
 
+		$('.update').each(function(index, object) {
+                    $(this).on("click", function(){
+                            var ID = object.id;
+                    $.ajax({
+                            type: 'POST',
+                            url: '/cgi-bin/organize/update.pl',
+                            data: { 'data_id': ID },
+                            success: function(res) {
+
+							$("#inbox").append('<li><input type="checkbox" /> ' + res.result);
+							document.getElementById('todo_input').value = "";
+
+                                                    },
+                            error: function() {alert("did not work");}
+                    });
+		    })});
+		$('.delete').each(function(index, object) {
+                            var ID = object.id;
+                    $(this).on("click", function(){
+                    $.ajax({
+                            type: 'POST',
+                            url: '/cgi-bin/organize/delete.pl',
+                            data: { 'data_id': ID },
+                            success: function(res) {
+
+				    object.parentElement.parentElement.remove();
+
+                                                    },
+                            error: function() {alert("did not work");}
+                    });
+			    })});
                 $("#add").click(function(){
                     var ID = document.getElementById('todo_input').value;
                     $.ajax({
@@ -288,7 +322,7 @@ while(($lname,$fname,$ext) = $sth->fetchrow()){
        print(q?<li onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)" class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
    }
    print(" $lname $fname\t$ext\n");
-   print("<div class='icons' style='float: right;'>✍ ❌</div>");
+   print("<div class='icons' style='float: right;'><span id=" . q?"? . $lname . $fname . $ext . q?"? . "class='update'>✍</span> <span id=" . q?"? . $lname . $fname . $ext . q?"? . "class='delete'>❌</span></div>");
    print("</li>")
 }
 print("</ul>");
