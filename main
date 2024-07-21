@@ -58,9 +58,23 @@ print (q*
 .over {
 //margin-top: 50px;
 }
+.icons {
+color: rgba(0, 0, 0, 0.0);
+}
+.hoverOver {
+color: black;
+}
 </style>
 
     <script>
+
+	function hoverBox(e) {
+	  e.childNodes[2].classList.add('hoverOver');
+	}
+
+	function hoverBoxOut(e) {
+	  e.childNodes[2].classList.remove('hoverOver');
+	}
 
 	function handleDragStart(e) {
 	  this.style.opacity = '0.4';
@@ -142,7 +156,6 @@ print (q*
 
 	      this.classList.remove('dragbox');
 	      dragSrcEl.remove();
-
 
 	      $.ajax({
 	              type: 'POST',
@@ -268,13 +281,14 @@ while(($lname,$fname,$ext) = $sth->fetchrow()){
    $checked = $sth_check->fetchrow();
    if ($checked == 0)
    {
-       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
+       print(q?<li onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)" class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
    }
    if ($checked == 1)
    {
-       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
+       print(q?<li onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)" class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
    }
    print(" $lname $fname\t$ext\n");
+   print("<div class='icons' style='float: right;'>✍ ❌</div>");
    print("</li>")
 }
 print("</ul>");
@@ -370,6 +384,7 @@ while(($lname,$fname,$ext) = $sth->fetchrow()){
        print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
    }
    print(" $lname $fname\t$ext\n");
+   print("<span class='icons'>✎🗑</span>");
    print("</li>")
 }
 print("</ul>");
