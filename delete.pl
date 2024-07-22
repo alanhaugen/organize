@@ -23,7 +23,7 @@ print $cgi->header('application/json;charset=UTF-8');
 
 my $id = $cgi->param('data_id');    
 
-my $sth = $dbh->prepare("SELECT todo_id FROM todos WHERE message='$id'")
+my $sth = $dbh->prepare("SELECT todo_id FROM todos WHERE message='$id' ORDER BY todo_id DESC")
                    or die "prepare statement failed: $dbh->errstr()";
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
