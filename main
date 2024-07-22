@@ -316,23 +316,28 @@ my $sth_check = $dbh->prepare("SELECT COALESCE(is_done, 0) FROM inbox INNER JOIN
 
 $sth_check->execute() or die "execution failed: $dbh->errstr()"; 
 
-my($lname,$fname,$ext);
+my($message, $lname,$fname,$ext);
 my $checked;
 
 print(q*<ul class="task-list" id="inbox">*);
 # loop through each row of the result set, and print it
-while(($lname,$fname,$ext) = $sth->fetchrow()){
+while(($message) = $sth->fetchrow()){
    $checked = $sth_check->fetchrow();
    if ($checked == 0)
    {
-       print(q?<li onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)" class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
+       print(q?<li onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)" class="box" draggable=true><input class="is_done" type="checkbox" id="? . $message . q?"/>?);
    }
    if ($checked == 1)
    {
-       print(q?<li onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)" class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
+       print(q?<li onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)" class="box" draggable=true><input class="is_done" type="checkbox" id="? . $message . q?" checked />?);
    }
-   print(" $lname $fname\t$ext\n");
-   print("<div class='icons' style='float: right;'><span id=" . q?"? . $lname . $fname . $ext . q?"? . "class='update'>✍</span> <span id=" . q?"? . $lname . $fname . $ext . q?"? . "class='delete'>❌</span></div>");
+   my @messageAndLinks = split('https?://*', $message); 
+   print(" $messageAndLinks[0]");
+   print("<div class='icons' style='float: right;'><span id=" . q?"? . $message . q?"? . "class='update'>✍</span> <span id=" . q?"? . $message . q?"? . "class='delete'>❌</span></div>");
+   if ($messageAndLinks[1])
+   {
+	   print ("<a href='http://" . "$messageAndLinks[1]" . "'>" . "$messageAndLinks[1]" . "</a>");
+   }
    print("</li>")
 }
 print("</ul>");
@@ -355,17 +360,23 @@ $sth_check->execute() or die "execution failed: $dbh->errstr()";
 
 print(q*<ul id="action" class="task-list">*);
 # loop through each row of the result set, and print it
-while(($lname,$fname,$ext) = $sth->fetchrow()){
+while(($message) = $sth->fetchrow()){
    $checked = $sth_check->fetchrow();
    if ($checked == 0)
    {
-       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
+       print(q?<li onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)" class="box" draggable=true><input class="is_done" type="checkbox" id="? . $message . q?"/>?);
    }
    if ($checked == 1)
    {
-       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
+       print(q?<li onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)" class="box" draggable=true><input class="is_done" type="checkbox" id="? . $message . q?" checked />?);
    }
-   print(" $lname $fname\t$ext\n");
+   my @messageAndLinks = split('https?://*', $message); 
+   print(" $messageAndLinks[0]");
+   print("<div class='icons' style='float: right;'><span id=" . q?"? . $message . q?"? . "class='update'>✍</span> <span id=" . q?"? . $message . q?"? . "class='delete'>❌</span></div>");
+   if ($messageAndLinks[1])
+   {
+	   print ("<a href='http://" . "$messageAndLinks[1]" . "'>" . "$messageAndLinks[1]" . "</a>");
+   }
    print("</li>")
 }
 print("</ul>");
@@ -386,17 +397,23 @@ $sth_check->execute() or die "execution failed: $dbh->errstr()";
 
 print(q*<ul class="task-list" id="wait">*);
 # loop through each row of the result set, and print it
-while(($lname,$fname,$ext) = $sth->fetchrow()){
+while(($message) = $sth->fetchrow()){
    $checked = $sth_check->fetchrow();
    if ($checked == 0)
    {
-       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
+       print(q?<li class="box" draggable=true onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)"><input class="is_done" type="checkbox" id="? . $message . q?"/>?);
    }
    if ($checked == 1)
    {
-       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
+       print(q?<li class="box" draggable=true onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)"><input class="is_done" type="checkbox" id="? . $message . q?" checked />?);
    }
-   print(" $lname $fname\t$ext\n");
+   my @messageAndLinks = split('https?://*', $message); 
+   print(" $messageAndLinks[0]");
+   print("<div class='icons' style='float: right;'><span id=" . q?"? . $message . q?"? . "class='update'>✍</span> <span id=" . q?"? . $message . q?"? . "class='delete'>❌</span></div>");
+   if ($messageAndLinks[1])
+   {
+	   print ("<a href='http://" . "$messageAndLinks[1]" . "'>" . "$messageAndLinks[1]" . "</a>");
+   }
    print("</li>")
 }
 print("</ul>");
@@ -417,18 +434,23 @@ $sth_check->execute() or die "execution failed: $dbh->errstr()";
 
 print(q*<ul class="task-list" id="long-term">*);
 # loop through each row of the result set, and print it
-while(($lname,$fname,$ext) = $sth->fetchrow()){
+while(($message) = $sth->fetchrow()){
    $checked = $sth_check->fetchrow();
    if ($checked == 0)
    {
-       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?"/>?);
+       print(q?<li class="box" draggable=true onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)"><input class="is_done" type="checkbox" id="? . $message . q?"/>?);
    }
    if ($checked == 1)
    {
-       print(q?<li class="box" draggable=true><input class="is_done" type="checkbox" id="? . $lname . $fname . $ext . q?" checked />?);
+       print(q?<li class="box" draggable=true onmouseover="hoverBox(this)" onmouseout="hoverBoxOut(this)"><input class="is_done" type="checkbox" id="? . $message . q?" checked />?);
    }
-   print(" $lname $fname\t$ext\n");
-   print("<span class='icons'>✎🗑</span>");
+   my @messageAndLinks = split('https?://*', $message); 
+   print(" $messageAndLinks[0]");
+   print("<div class='icons' style='float: right;'><span id=" . q?"? . $message . q?"? . "class='update'>✍</span> <span id=" . q?"? . $message . q?"? . "class='delete'>❌</span></div>");
+   if ($messageAndLinks[1])
+   {
+	   print ("<a href='http://" . "$messageAndLinks[1]" . "'>" . "$messageAndLinks[1]" . "</a>");
+   }
    print("</li>")
 }
 print("</ul>");
