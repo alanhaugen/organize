@@ -9,8 +9,8 @@ use DBI;
 
 # Setup variables to connect to DB
 my $data_source = q/DBI:mysql:organizer;127.0.0.1;3306/;
-my $user = q/root/;
-my $password = q//;
+my $user = q/awh/;
+my $password = q/scroll64/;
 
 # Connect to the data source and get a handle for that connection.
 my $dbh = DBI->connect($data_source, $user, $password)

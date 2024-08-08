@@ -67,6 +67,7 @@ color: black;
 .update {
 padding-right: 10px;
 }
+
 </style>
 
     <script>
@@ -306,7 +307,7 @@ print(  q*
         *
 );
 
-my $sth = $dbh->prepare("SELECT message FROM inbox INNER JOIN todos ON todos.todo_id=inbox.todo_id")
+my $sth = $dbh->prepare("SELECT message FROM inbox INNER JOIN todos ON todos.todo_id=inbox.todo_id ORDER BY listorder ASC")
                    or die "prepare statement failed: $dbh->errstr()";
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 

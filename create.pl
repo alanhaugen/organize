@@ -9,8 +9,8 @@ use DBI;
 
 # Setup variables to connect to DB
 my $data_source = q/DBI:mysql:organizer;127.0.0.1;3306/;
-my $user = q/root/;
-my $password = q//;
+my $user = q/awh/;
+my $password = q/scroll64/;
 
 # Connect to the data source and get a handle for that connection.
 my $dbh = DBI->connect($data_source, $user, $password)
@@ -21,13 +21,22 @@ my $cgi = CGI->new;
 
 print $cgi->header('application/json;charset=UTF-8');
 
-my $id = $cgi->param('data_id');    
+my $id = $cgi->param('data_id');
 
 # Remove illegal characters from string to become SQL insert
 $id =~ s/"/``/; 
 $id =~ s/'/`/; 
 
-my $sth = $dbh->prepare("INSERT INTO todos(message) VALUES('$id')")
+my $sth = $dbh->prepare("SELECT COALESCE(listorder,1) FROM todos ORDER BY listorder DESC LIMIT 1")
+                   or die "prepare statement failed: $dbh->errstr()";
+
+$sth->execute() or die "execution failed: $dbh->errstr()"; 
+
+my $largest_listorder;
+
+$largest_listorder = $sth->fetchrow();
+
+$sth = $dbh->prepare("INSERT INTO todos(message, listorder) VALUES('$id', $largest_listorder + 1)")
                    or die "prepare statement failed: $dbh->errstr()";
 
 $sth->execute() or die "execution failed: $dbh->errstr()"; 
